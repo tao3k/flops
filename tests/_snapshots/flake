@@ -1,0 +1,11 @@
+#pretty
+{
+  packages = {
+    x86_64-darwin = {
+      firefox = <derivation firefox-112.0>;
+    };
+    x86_64-linux = {
+      firefox = <derivation firefox-112.0>;
+    };
+  };
+}
