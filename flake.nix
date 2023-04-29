@@ -25,10 +25,11 @@
     lib = import ./src self.inputs;
     inherit (lib.flake) pops;
   in {
+    inherit lib;
     checks = inputs.namaka.lib.load {
       flake = self;
       inputs = {
-        inherit pops;
+        inherit lib;
         inputs =
           inputs
           // {

@@ -1,4 +1,7 @@
-{yants, root}:
+{
+  yants,
+  root,
+}:
 with (yants "flops"); {
   pop = openStruct root.structAttrs.pop;
   exporterPop = openStruct root.structAttrs.exporterPop;

@@ -1,8 +1,9 @@
 {
-  pops,
+  lib,
   inputs,
 }: let
   inherit (inputs) POP;
+  inherit (lib.flake) pops;
   exampleFlake = {
     inherit inputs;
     outputs = inputs:

@@ -1,0 +1,20 @@
+#pretty
+{
+  config = {
+    services = {
+      openssh = {
+        enable = true;
+      };
+    };
+  };
+  imports = [ ];
+  options = {
+    services = {
+      openssh = {
+        description = ''
+          Options to pass to the import.
+        '';
+      };
+    };
+  };
+}
