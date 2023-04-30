@@ -4,6 +4,16 @@
     services = {
       openssh = {
         enable = true;
+        kPop = {
+          __meta__ = {
+            defaults = { };
+            extension = <function>;
+            name = "kPop";
+            precedenceList = [ ];
+            supers = [ ];
+          };
+          a = "b";
+        };
       };
     };
   };

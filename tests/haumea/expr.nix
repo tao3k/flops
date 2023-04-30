@@ -3,11 +3,13 @@
   inputs,
 }: let
   inherit (inputs) POP;
-  inherit (lib.configs) pops;
-  haumea =
-    ((pops.haumea.setInit {
+  inherit (lib.configs) haumea;
+  nixosModules =
+    ((haumea.setInit {
         src = ./__fixture;
-        inputs = {};
+        inputs = {
+          POP = inputs.POP;
+        };
         transformer = with inputs.haumea.lib.transformers; [
           liftDefault
         ];
@@ -20,4 +22,4 @@
       (hoistAttrs "_options" "options")
     ]);
 in
-  haumea.outputs {nixosModules = true;}
+  nixosModules.outputs {nixosModules = true;}

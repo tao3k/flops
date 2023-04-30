@@ -1,0 +1,3 @@
+{
+  openssh.enable = true;
+}

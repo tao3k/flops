@@ -1,5 +1,5 @@
-let
-  l = builtins;
+{lib}: let
+  l = lib // builtins;
   /*
   A helper function which hides the complexities of dealing
   with 'system' properly from you, while still providing

@@ -1,12 +1,26 @@
-{POP}: {
-  enable = true;
+{
+  lib,
+  config,
+  ...
+}: {
   _imports = [];
-  _options = {
+  enable = true;
+  settings = {
+    KbdInteractiveAuthentication = false;
+    PasswordAuthentication = false;
+    permitRootLogin = "yes";
+  };
+  customOp = {
+    endpoint = "localhost:5158";
+    config = config.services.openssh.enable;
+  };
+  _options = lib.mkOption {
+    type = lib.types.attrs;
+    default = {};
     description = ''
       Options to pass to the import.
     '';
   };
-  kPop = POP.lib.kPop {a = "b";};
   # _options = lib.mkOption {
   #   type = lib.types.submodule {
   #     freeformType = lib.types.attrs;

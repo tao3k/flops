@@ -1,0 +1,3 @@
+{
+  pulseaudio.enable = true;
+}

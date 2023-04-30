@@ -43,11 +43,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1681176209,
-        "narHash": "sha256-bJLDun6esIyWtwRVXcsgzGbh4UKu8wJDrPgykqPyzmg=",
+        "lastModified": 1682523221,
+        "narHash": "sha256-z2eN4JhafFJ/zKb4suyA0gtcsJS8KHwn3S5DUb0MxfU=",
         "owner": "nix-community",
         "repo": "haumea",
-        "rev": "b915b66b27da3a595d77b139e945bb0a2fcac926",
+        "rev": "533b58156358c4b6dcf2bf0650355f4ee77fc280",
         "type": "github"
       },
       "original": {
