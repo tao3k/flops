@@ -2,7 +2,7 @@
   inputs = {
     nixlib.url = "github:nix-community/nixpkgs.lib";
     POP.url = "github:divnix/POP";
-    yants.url = "github:Pacman99/yants/open-structs";
+    yants.url = "github:divnix/yants";
 
     haumea.url = "github:nix-community/haumea";
     haumea.inputs.nixpkgs.follows = "nixlib";

@@ -185,16 +185,15 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1671695273,
-        "narHash": "sha256-KC032e1G3MKPeW8JWgL/bBvbv529ch13sFgsd2MNSFQ=",
-        "owner": "Pacman99",
+        "lastModified": 1677285314,
+        "narHash": "sha256-hlAcg2514zKrPu8jn24BUsIjjvXvCLdw1jvKgBTpqko=",
+        "owner": "divnix",
         "repo": "yants",
-        "rev": "8188069859ed05a3036d4bf079160a6b8edb01ca",
+        "rev": "9eab24b273ce021406c852166c216b86e2bb4ec4",
         "type": "github"
       },
       "original": {
-        "owner": "Pacman99",
-        "ref": "open-structs",
+        "owner": "divnix",
         "repo": "yants",
         "type": "github"
       }
