@@ -22,4 +22,4 @@
       (hoistAttrs "_options" "options")
     ]);
 in
-  nixosModules.outputs {nixosModules = true;}
+  nixosModules.outputsForTarget "nixosModules"

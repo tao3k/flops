@@ -33,9 +33,7 @@
         addInputs = function;
       };
 
-    haumeaOptions = struct "options" {
-      nixosModules = bool;
-    };
+    haumeaOptions = enum "options" ["nixosModules"];
   };
 in
   structAttrs

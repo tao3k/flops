@@ -25,7 +25,7 @@ in
         extendPop self (self: super: {
           init = super.init // setInit;
         }));
-      outputs = defun (with types; [haumeaOptions (attrs any)]) (
+      outputsForTarget = defun (with types; [haumeaOptions (attrs any)]) (
         import ./__loadConfig.nix {inherit haumea self;}
       );
       addTransformer = defun (with types; [(list function) haumeaPop]) (
