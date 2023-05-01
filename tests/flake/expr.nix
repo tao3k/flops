@@ -10,7 +10,7 @@
       (
         (
           (
-            pops.flake.setInitInputs inputs
+            pops.default.setInitInputs inputs
           )
           .addInputsExtenders [
             (POP.lib.extendPop pops.inputsExtender (self: super: {

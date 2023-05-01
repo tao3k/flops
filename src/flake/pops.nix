@@ -54,7 +54,7 @@ in {
     };
   };
 
-  flake = pop {
+  default = pop {
     supers = [
       # Extend both pops and add apis for multiple extenders/exporters
       self.exporter

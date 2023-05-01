@@ -3,8 +3,9 @@
   lib,
   root,
   self,
+  POP,
 }: let
-  inherit (root) pops;
+  inherit (root.configs) pops;
   /*
   nixosProfiles.outputs {}
   => { hom-manager = { ... }; nixos = { ... }; }
@@ -19,7 +20,7 @@
    => { options = {...}, imports = [...], config = {...} }
   */
   haumeaNixOSModules =
-    ((root.haumea.setInit {
+    ((root.configs.haumea.setInit {
         src = ./recipes/nixosModules;
         inputs = {};
         transformer = with haumea.lib.transformers; [
@@ -37,25 +38,47 @@
 in {
   inherit haumeaNixOSModules nixosProfiles;
 
+  configs =
+    (((pops.default.setInitRecipes
+          {
+            nixos.default = haumeaNixOSModules;
+          })
+        .addArgsExtender
+        {
+          nixos.default = {inherit haumea;};
+        })
+      .addRecipesExtender {
+        home-manager = {};
+      })
+    .addExporters [
+      (POP.lib.extendPop pops.exporter (self: super: {
+        exports.test = {
+          r = self.recipes;
+          args = self.args;
+        };
+      }))
+    ];
+
   eval = lib.evalModules {
     modules = [
       (
         {...} @ args:
-          (haumeaNixOSModules.addInputs args).outputs {nixosModules = true;}
-        # pops = (config.pops.addConfigsExtenders [
-        # (POP.lib.extendPop pops.ConfigsExtender (self: super: {
-        #  configs.nixos = custom self.args.nixos;
-        # }
-        #]
-        # addArgsExtenders [
-        # (POP.lib.extendPop pops.ArgsExtender (self: super: {
-        # args.nixos = args //
-        #  set the specialArgs to the nixos
-        # { specialArgs_1 = "1"; };
-        # )))
-        #];
-        # custom' = pops.feeders.nixos pops.args.nixos.default;
-        # custom'-home = pops.feeders.home-manager.common pops.args.home-manager.common;
+        # (haumeaNixOSModules.addInputs args).outputs {nixosModules = true;}
+          (((pops.default.setInitRecipes
+                {
+                  nixos.default = haumeaNixOSModules;
+                })
+              .addArgsExtender
+              {
+                nixos.default = args;
+              })
+            .addExporters [
+              (POP.lib.extendPop pops.exporter (self: super: {
+                exports.nixos = (self.recipes.nixos.default.addInputs self.args.nixos.default).outputs {nixosModules = true;};
+              }))
+            ])
+          .exports
+          .nixos
       )
     ];
   };
