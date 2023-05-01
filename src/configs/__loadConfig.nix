@@ -11,7 +11,8 @@
 in
   if (options == "nixosModules")
   then {
-    inherit (loadConfig) options imports;
+    options = loadConfig.options or [];
+    imports = loadConfig.imports or [];
     config = builtins.removeAttrs loadConfig ["options" "imports"];
   }
   else loadConfig

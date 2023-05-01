@@ -25,7 +25,7 @@
           inputs = inputs;
           load = function;
         };
-        transformer = list function;
+        transformer = list any; #list (either function any);
 
         setInit = function;
 
@@ -33,7 +33,7 @@
         addInputs = function;
       };
 
-    haumeaOptions = enum "options" ["nixosModules"];
+    haumeaOptions = enum "options" ["nixosModules" "default"];
   };
 in
   structAttrs

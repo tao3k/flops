@@ -25,6 +25,10 @@
         inputs = {};
         transformer = with haumea.lib.transformers; [
           liftDefault
+          (
+            _: x:
+              removeAttrs x ["services" "openssh"]
+          )
         ];
       })
       .addInputs {

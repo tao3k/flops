@@ -28,7 +28,7 @@ in
       outputsForTarget = defun (with types; [haumeaOptions (attrs any)]) (
         import ./__loadConfig.nix {inherit haumea self;}
       );
-      addTransformer = defun (with types; [(list function) haumeaPop]) (
+      addTransformer = defun (with types; [(list any) haumeaPop]) (
         transformer:
           extendPop self (self: super: {
             transformer = super.transformer ++ transformer;
