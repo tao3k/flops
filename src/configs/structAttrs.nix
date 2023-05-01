@@ -24,7 +24,6 @@
           transformer = transformer;
           inputs = inputs;
           load = function;
-          nixosModules = bool;
         };
         transformer = list function;
 
@@ -33,6 +32,10 @@
         addTransformer = function;
         addInputs = function;
       };
+
+    haumeaOptions = struct "options" {
+      nixosModules = bool;
+    };
   };
 in
   structAttrs

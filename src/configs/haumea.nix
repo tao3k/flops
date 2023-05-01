@@ -17,7 +17,6 @@ in
         src = ./.;
         load = haumea.lib.loaders.default;
         transformer = [];
-        nixosModules = false;
       };
     };
     extension = self: super: {
@@ -25,21 +24,9 @@ in
         extendPop self (self: super: {
           init = super.init // setInit;
         }));
-      outputs = defun (with types; [(attrs any) (attrs any)]) (options: let
-        loadConfig = haumea.lib.load {
-          src = self.init.src;
-          loader = self.init.load;
-          transformer = self.init.transformer ++ self.transformer;
-          inputs = self.init.inputs // self.inputs;
-        };
-      in
-        if (options ? nixosModules && options.nixosModules)
-        then {
-          inherit (loadConfig) options imports;
-          config = builtins.removeAttrs loadConfig ["options" "imports"];
-        }
-        else loadConfig);
-
+      outputs = defun (with types; [haumeaOptions (attrs any)]) (
+        import ./__loadConfig.nix {inherit haumea self;}
+      );
       addTransformer = defun (with types; [(list function) haumeaPop]) (
         transformer:
           extendPop self (self: super: {
