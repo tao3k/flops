@@ -17,6 +17,7 @@ in
         src = ./.;
         load = haumea.lib.loaders.default;
         transformer = [];
+        inputs = {};
       };
     };
     extension = self: super: {
