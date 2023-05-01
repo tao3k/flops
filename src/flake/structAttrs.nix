@@ -20,6 +20,7 @@
         inputs = attrs any;
         exports = attrs any;
         setInputs = function;
+        setSystem = function;
       };
 
     inputsExtenderPop =

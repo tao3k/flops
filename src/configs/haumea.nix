@@ -6,7 +6,7 @@
 }: let
   inherit (POP.lib) pop extendPop;
   inherit (yants) defun;
-  types = yants; #root.haumea.types // ;
+  types = yants // root.configs.types;
 in
   pop {
     defaults = {
@@ -21,11 +21,11 @@ in
       };
     };
     extension = self: super: {
-      setInit = setInit:
+      setInit = defun (with types; [(attrs any) haumeaPop]) (setInit:
         extendPop self (self: super: {
           init = super.init // setInit;
-        });
-      outputs = options: let
+        }));
+      outputs = defun (with types; [(attrs any) (attrs any)]) (options: let
         loadConfig = haumea.lib.load {
           src = self.init.src;
           loader = self.init.load;
@@ -38,15 +38,15 @@ in
           inherit (loadConfig) options imports;
           config = builtins.removeAttrs loadConfig ["options" "imports"];
         }
-        else loadConfig;
+        else loadConfig);
 
-      addTransformer = (
+      addTransformer = defun (with types; [(list function) haumeaPop]) (
         transformer:
           extendPop self (self: super: {
             transformer = super.transformer ++ transformer;
           })
       );
-      addInputs = (
+      addInputs = defun (with types; [(attrs any) haumeaPop]) (
         inputs:
           extendPop self (self: super: {
             inputs = super.inputs // inputs;
