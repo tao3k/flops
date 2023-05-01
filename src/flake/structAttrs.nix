@@ -2,7 +2,7 @@
   yants,
   root,
 }: let
-  types = root.types // yants;
+  types = root.flake.types // yants;
   structAttrs = with yants; {
     pop = {
       __meta__ = option (struct "__meta__" {

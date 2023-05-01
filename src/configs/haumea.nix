@@ -1,8 +1,12 @@
 {
   POP,
   haumea,
+  yants,
+  root,
 }: let
   inherit (POP.lib) pop extendPop;
+  inherit (yants) defun;
+  types = yants; #root.haumea.types // ;
 in
   pop {
     defaults = {
@@ -12,10 +16,7 @@ in
       init = {
         src = ./.;
         load = haumea.lib.loaders.default;
-        transformer = with haumea.lib.transformers; [
-          (hoistLists "_imports" "imports")
-          (hoistAttrs "_options" "options")
-        ];
+        transformer = [];
         nixosModules = false;
       };
     };

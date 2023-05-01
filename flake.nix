@@ -22,7 +22,7 @@
     nixpkgs,
     ...
   } @ inputs: let
-    lib = import ./src self.inputs;
+    lib = import ./src/__loader.nix self.inputs;
     inherit (lib.flake) pops;
   in {
     inherit lib;

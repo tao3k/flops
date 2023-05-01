@@ -3,10 +3,10 @@
   POP,
   lib,
   yants,
+  self,
 }: let
-  types = root.types // yants;
+  types = root.flake.types // yants;
   inherit (POP.lib) pop extendPop;
-  inherit (root) pops;
   inherit (yants) defun;
   inherit (lib) mapAttrs mergeToDepth foldl filter deSystemize;
 in {
@@ -57,8 +57,8 @@ in {
   flake = pop {
     supers = [
       # Extend both pops and add apis for multiple extenders/exporters
-      pops.exporter
-      pops.inputsExtender
+      self.exporter
+      self.inputsExtender
     ];
     defaults = {
       inputsExtenders = [];

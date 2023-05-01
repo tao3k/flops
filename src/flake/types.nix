@@ -3,8 +3,8 @@
   root,
 }:
 with (yants "flops"); {
-  pop = openStruct root.structAttrs.pop;
-  exporterPop = openStruct root.structAttrs.exporterPop;
-  inputsExtenderPop = openStruct root.structAttrs.inputsExtenderPop;
-  flakePop = openStruct root.structAttrs.flakePop;
+  pop = openStruct root.flake.structAttrs.pop;
+  exporterPop = openStruct root.flake.structAttrs.exporterPop;
+  inputsExtenderPop = openStruct root.flake.structAttrs.inputsExtenderPop;
+  flakePop = openStruct root.flake.structAttrs.flakePop;
 }
