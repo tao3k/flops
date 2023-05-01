@@ -63,7 +63,7 @@ in {
     modules = [
       (
         {...} @ args:
-        # (haumeaNixOSModules.addInputs args).outputs {nixosModules = true;}
+        # (haumeaNixOSModules.addInputs args).outputsForTarget "nixosModules";
           (((pops.default.setInitRecipes
                 {
                   nixos.default = haumeaNixOSModules;
@@ -74,7 +74,7 @@ in {
               })
             .addExporters [
               (POP.lib.extendPop pops.exporter (self: super: {
-                exports.nixos = (self.recipes.nixos.default.addInputs self.args.nixos.default).outputs {nixosModules = true;};
+                exports.nixos = (self.recipes.nixos.default.addInputs self.args.nixos.default).outputsForTarget "nixosModules";
               }))
             ])
           .exports
