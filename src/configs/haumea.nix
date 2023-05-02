@@ -10,7 +10,6 @@
 in
   pop {
     defaults = {
-      outputs = {};
       transformer = [];
       inputs = {};
       init = {

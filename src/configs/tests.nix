@@ -4,6 +4,7 @@
   root,
   self,
   POP,
+  nix-filter,
 }: let
   inherit (root.configs) pops;
   /*
@@ -16,7 +17,7 @@
     inputs = {inherit lib;};
   };
   /*
-  haumeaNixOSModules.outputs { nixosModules = true;}
+  haumeaNixOSModules.outputsForTarget "nixosModules"
    => { options = {...}, imports = [...], config = {...} }
   */
   haumeaNixOSModules =
@@ -24,11 +25,8 @@
         src = ./recipes/nixosModules;
         inputs = {};
         transformer = with haumea.lib.transformers; [
-          liftDefault
-          (
-            _: x:
-              removeAttrs x ["services" "openssh"]
-          )
+          # liftDefault
+          (lib.removeAttrsFromDepth ["services"])
         ];
       })
       .addInputs {

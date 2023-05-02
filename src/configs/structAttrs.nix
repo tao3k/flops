@@ -20,7 +20,7 @@
       // rec {
         inputs = attrs any;
         init = struct "haumea.load" {
-          src = path;
+          src = either path string;
           transformer = transformer;
           inputs = inputs;
           load = function;
