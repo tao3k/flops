@@ -19,6 +19,7 @@
       structAttrs.pop
       // rec {
         inputs = attrs any;
+        final = attrs any;
         init = struct "haumea.load" {
           src = either path string;
           transformer = transformer;

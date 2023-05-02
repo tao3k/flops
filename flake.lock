@@ -20,6 +20,31 @@
         "type": "github"
       }
     },
+    "dmerge": {
+      "inputs": {
+        "haumea": [
+          "haumea"
+        ],
+        "namaka": [
+          "namaka"
+        ],
+        "nixlib": "nixlib_2",
+        "yants": "yants"
+      },
+      "locked": {
+        "lastModified": 1681616844,
+        "narHash": "sha256-xKMiUJaOs3yTbWln047m1P/K/QvijuII3+nVN02SQmY=",
+        "owner": "divnix",
+        "repo": "dmerge",
+        "rev": "4d547351cac82814800d562f0f13686eb63077d9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "divnix",
+        "repo": "dmerge",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -107,6 +132,21 @@
         "type": "github"
       }
     },
+    "nixlib_3": {
+      "locked": {
+        "lastModified": 1681001314,
+        "narHash": "sha256-5sDnCLdrKZqxLPK4KA8+f4A3YKO/u6ElpMILvX0g72c=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "367c0e1086a4eb4502b24d872cea2c7acdd557f4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1653581809,
@@ -141,11 +181,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1681662962,
-        "narHash": "sha256-OWnJXsfdM0q+vGrRC1YSAFb0oIXbrnNwCRofdglP9Fw=",
+        "lastModified": 1682960002,
+        "narHash": "sha256-5Zjh4pT3lAjFGN1gVrjqj1LLJHKCAlGdLD8raU7oEMc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "b605a205390e53e18c03329ab3dba489970c1e0a",
+        "rev": "8670e496ffd093b60e74e7fa53526aa5920d09eb",
         "type": "github"
       },
       "original": {
@@ -173,14 +213,36 @@
     "root": {
       "inputs": {
         "POP": "POP",
+        "dmerge": "dmerge",
         "haumea": "haumea",
         "namaka": "namaka",
-        "nixlib": "nixlib_2",
+        "nixlib": "nixlib_3",
         "nixpkgs": "nixpkgs_3",
-        "yants": "yants"
+        "yants": "yants_2"
       }
     },
     "yants": {
+      "inputs": {
+        "nixpkgs": [
+          "dmerge",
+          "nixlib"
+        ]
+      },
+      "locked": {
+        "lastModified": 1677285314,
+        "narHash": "sha256-hlAcg2514zKrPu8jn24BUsIjjvXvCLdw1jvKgBTpqko=",
+        "owner": "divnix",
+        "repo": "yants",
+        "rev": "9eab24b273ce021406c852166c216b86e2bb4ec4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "divnix",
+        "repo": "yants",
+        "type": "github"
+      }
+    },
+    "yants_2": {
       "inputs": {
         "nixpkgs": "nixpkgs_4"
       },

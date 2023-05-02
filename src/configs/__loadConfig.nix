@@ -2,17 +2,15 @@
   haumea,
   self,
 }: options: let
-  loadConfig = haumea.lib.load {
-    src = self.init.src;
-    loader = self.init.load;
-    transformer = self.init.transformer ++ self.transformer;
-    inputs = self.init.inputs // self.inputs;
-  };
+  finalAttrs =
+    if self.final != {}
+    then self.final
+    else self.loadConfig;
 in
   if (options == "nixosModules")
   then {
-    options = loadConfig.options or [];
-    imports = loadConfig.imports or [];
-    config = builtins.removeAttrs loadConfig ["options" "imports"];
+    options = finalAttrs.options or [];
+    imports = finalAttrs.imports or [];
+    config = builtins.removeAttrs finalAttrs ["options" "imports"];
   }
-  else loadConfig
+  else finalAttrs

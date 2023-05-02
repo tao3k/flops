@@ -6,7 +6,9 @@
       Options to pass to the import.
     '';
   };
-  kPop = POP.lib.kPop {a = "b";};
+  custom = "null";
+  customList = [];
+  customList2 = ["a"];
   # _options = lib.mkOption {
   #   type = lib.types.submodule {
   #     freeformType = lib.types.attrs;

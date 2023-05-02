@@ -9,6 +9,10 @@
 
     namaka.url = "github:nix-community/namaka";
     namaka.inputs.haumea.follows = "haumea";
+
+    dmerge.url = "github:divnix/dmerge";
+    dmerge.inputs.haumea.follows = "haumea";
+    dmerge.inputs.namaka.follows = "namaka";
   };
 
   inputs = {
@@ -29,7 +33,7 @@
     checks = inputs.namaka.lib.load {
       flake = self;
       inputs = {
-        inherit lib;
+        lib = lib // inputs.nixlib.lib;
         inputs =
           inputs
           // {

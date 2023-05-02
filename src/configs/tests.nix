@@ -4,7 +4,7 @@
   root,
   self,
   POP,
-  nix-filter,
+  dmerge,
 }: let
   inherit (root.configs) pops;
   /*
@@ -21,22 +21,34 @@
    => { options = {...}, imports = [...], config = {...} }
   */
   haumeaNixOSModules =
-    ((root.configs.haumea.setInit {
-        src = ./recipes/nixosModules;
-        inputs = {};
-        transformer = with haumea.lib.transformers; [
-          # liftDefault
-          (lib.removeAttrsFromDepth ["services"])
-        ];
-      })
-      .addInputs {
-        inherit lib;
-      })
-    .addTransformer
-    (with haumea.lib.transformers; [
-      (hoistLists "_imports" "imports")
-      (hoistAttrs "_options" "options")
-    ]);
+    ((((root.configs.haumea.setInit {
+            src = ./recipes/nixosModules;
+            inputs = {};
+            transformer = with haumea.lib.transformers; [
+              liftDefault
+              (lib.removeAttrsFromDepth ["services" "openssh"])
+            ];
+          })
+          .addInputs {
+            inherit lib;
+          })
+        .addTransformer
+        (with haumea.lib.transformers; [
+          (hoistLists "_imports" "imports")
+          (hoistAttrs "_options" "options")
+        ]))
+      .addMerge (final:
+        lib.recursiveUpdate final {
+          services.openssh.enable = false;
+        }))
+    .addMerge (
+      final:
+        lib.recursiveUpdate final {
+          services.openssh = {
+            customOp = "append";
+          };
+        }
+    );
 in {
   inherit haumeaNixOSModules nixosProfiles;
 

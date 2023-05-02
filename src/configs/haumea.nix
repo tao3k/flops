@@ -3,6 +3,8 @@
   haumea,
   yants,
   root,
+  lib,
+  dmerge,
 }: let
   inherit (POP.lib) pop extendPop;
   inherit (yants) defun;
@@ -18,6 +20,7 @@ in
         transformer = [];
         inputs = {};
       };
+      final = {};
     };
     extension = self: super: {
       setInit = defun (with types; [(attrs any) haumeaPop]) (setInit:
@@ -33,6 +36,22 @@ in
             transformer = super.transformer ++ transformer;
           })
       );
+
+      loadConfig = haumea.lib.load {
+        src = self.init.src;
+        loader = self.init.load;
+        transformer = self.init.transformer ++ self.transformer;
+        inputs = self.init.inputs // self.inputs;
+      };
+
+      addMerge = attrs:
+        extendPop self (self: super: {
+          final =
+            if super.final == {}
+            then (attrs self.loadConfig)
+            else (attrs super.final);
+        });
+
       addInputs = defun (with types; [(attrs any) haumeaPop]) (
         inputs:
           extendPop self (self: super: {

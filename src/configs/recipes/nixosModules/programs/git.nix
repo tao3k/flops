@@ -1,4 +1,4 @@
-{lib}:{
+{lib}: {
   enable = true;
   _options = lib.mkOption {
     type = lib.types.submodule {

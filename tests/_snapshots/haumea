@@ -3,17 +3,16 @@
   config = {
     services = {
       openssh = {
+        custom = "null";
+        customList = [
+          "merge"
+        ];
+        customList2 = [
+          "a"
+          "b"
+          "c"
+        ];
         enable = true;
-        kPop = {
-          __meta__ = {
-            defaults = { };
-            extension = <function>;
-            name = "kPop";
-            precedenceList = [ ];
-            supers = [ ];
-          };
-          a = "b";
-        };
       };
     };
   };

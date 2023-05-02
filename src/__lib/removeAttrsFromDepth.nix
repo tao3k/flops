@@ -1,14 +1,7 @@
 {
   lib,
   super,
-}: from:
-# Example from / to
-# - Lifting `options` from: _api, to: options
-#
-# Note:
-#   underscore used as mere convention to signalling to the user the  "private"
-#   nature, they won't be part of the final view presented to the user
-let
+}: from: let
   inherit
     (lib)
     recursiveUpdate

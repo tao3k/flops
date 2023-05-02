@@ -2,10 +2,10 @@
 {
   packages = {
     x86_64-darwin = {
-      firefox = <derivation firefox-112.0>;
+      firefox = <derivation firefox-112.0.2>;
     };
     x86_64-linux = {
-      firefox = <derivation firefox-112.0>;
+      firefox = <derivation firefox-112.0.2>;
     };
   };
 }
