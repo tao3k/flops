@@ -7,7 +7,7 @@
     haumea.url = "github:nix-community/haumea";
     haumea.inputs.nixpkgs.follows = "nixlib";
 
-    namaka.url = "github:nix-community/namaka";
+    namaka.url = "github:nix-community/namaka/v0.1.1";
     namaka.inputs.haumea.follows = "haumea";
 
     dmerge.url = "github:divnix/dmerge";
@@ -31,7 +31,7 @@
   in {
     inherit lib;
     checks = inputs.namaka.lib.load {
-      flake = self;
+      src = ./tests;
       inputs = {
         lib = lib // inputs.nixlib.lib;
         inputs =
