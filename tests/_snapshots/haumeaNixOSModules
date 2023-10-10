@@ -1,0 +1,19 @@
+#pretty
+{
+  exports = {
+    success = true;
+    value = { };
+  };
+  outputs = {
+    success = true;
+    value = {
+      programs = {
+        emacs = <function, args: {config?, options?}>;
+        git = <function, args: {config?, options?}>;
+      };
+      services = {
+        openssh = <function, args: {config?, options?}>;
+      };
+    };
+  };
+}

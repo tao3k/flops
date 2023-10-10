@@ -1,0 +1,118 @@
+#+TITLE: idea
+#+AUTHOR: GuangTao Zhang
+#+EMAIL: gtrunsec@hardenedlinux.org
+#+DATE: 2023-04-16 Sun 16:16
+
+
+* pops
+** Example
+
+#+begin_src nix
+{
+  pops.configs.setInitConfigs {
+    nixos = nixosRecipes;
+    home-manager = homeManagerRecipes;
+  };
+}
+#+end_src
+
+** configsExtender
+
+#+begin_src nix
+{
+  defaults = {
+    initConfigs = {};
+    configs = {
+      # set the recipe from haumea load
+      nixos = { };
+      terrnix = {};
+      home-manager = {};
+      nix-nomad = {};
+    };
+  };
+}
+#+end_src
+
+
+* recipes
+
+#+begin_src nix
+{
+  nixosModules = with haumea.lib;
+    load {
+      src = ./nixosModules;
+      transformer = with inputs.haumea.lib.transformers; [
+        liftDefault
+        (hoistLists "_imports" "imports")
+        (hoistAttrs "_api" "options")
+      ];
+      inherit inputs;
+    };
+
+  homeModules = with haumea.lib;
+    load {
+      src = ./homeModules;
+      transformer = with inputs.haumea.lib.transformers; [
+        liftDefault
+        (hoistLists "_imports" "imports")
+        (hoistAttrs "_api" "options")
+      ];
+    };
+  terrnix = load {
+    src = ./terrnix;
+    transformer = with inputs.haumea.lib.transformers; [
+      liftDefault
+    ];
+  };
+}
+#+end_src
+
+** nixosModules
+
+- toplevel
+
+#+begin_src nix
+{
+  common = load.nixosModules;
+  user_1 = load.nixosModules_1;
+  guangtao = load.nixosMules_2;
+}
+#+end_src
+
+- haumea Src
+
+#+begin_src nix
+{
+  nixosModules = {
+    imports = []; # hoisted by transformer
+    services = {};
+    programs = {};
+    users = {};
+  };
+}
+#+end_src
+
+
+
+
+* FileSystems
+
+** top-level
+
+#+begin_src sh
+{
+  users = { user1_ user_2 } # user specifical
+  hosts = { host_1 host_2 } #
+}
+#+end_src
+
+** second-level
+
+#+begin_src nix
+{
+ user1 = {
+   nixosModules = {}
+   homeModules = {}
+ };
+}
+#+end_src

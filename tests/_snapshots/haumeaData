@@ -1,0 +1,100 @@
+#pretty
+{
+  exports = {
+    success = true;
+    value = {
+      customData = {
+        data = {
+          foo = "baz";
+        };
+        treefmt = {
+          formatter = {
+            nix = {
+              command = "alejandra";
+              excludes = [
+                "data.nix"
+              ];
+            };
+            prettier = {
+              includes = [
+                "*.jsl"
+              ];
+            };
+          };
+          prettier = {
+            includes = [
+              "*.toml"
+            ];
+          };
+        };
+      };
+    };
+  };
+  outputs = {
+    success = true;
+    value = {
+      default = {
+        data = {
+          foo = "baz";
+        };
+        treefmt = {
+          formatter = {
+            nix = {
+              command = "alejandra";
+              excludes = [ ];
+            };
+          };
+          prettier = {
+            includes = [
+              "*.toml"
+            ];
+          };
+        };
+      };
+      dmergeWithOutputs = {
+        data = {
+          foo = "baz";
+        };
+        treefmt = {
+          formatter = {
+            nix = {
+              command = "nixfmt";
+              excludes = [ ];
+            };
+            prettier = {
+              includes = [
+                "*.dmergeOutputs"
+              ];
+            };
+          };
+          prettier = {
+            includes = [
+              "*.toml"
+            ];
+          };
+        };
+      };
+      funWithOutputs = {
+        data = {
+          foo = "baz";
+        };
+        dataExt = {
+          foo = "bar";
+        };
+        treefmt = {
+          formatter = {
+            nix = {
+              command = "alejandra";
+              excludes = [ ];
+            };
+          };
+          prettier = {
+            includes = [
+              "*.toml"
+            ];
+          };
+        };
+      };
+    };
+  };
+}

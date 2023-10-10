@@ -1,0 +1,53 @@
+#pretty
+{
+  custom = {
+    programs = {
+      git = {
+        __profiles__ = {
+          enable = false;
+          name = "guangtao";
+        };
+      };
+    };
+  };
+  default = {
+    programs = {
+      emacs = {
+        customAttr = {
+          a = "a";
+        };
+        customAttr2 = {
+          a = "a";
+        };
+        customList = [
+          "a"
+        ];
+        customList2 = [
+          "a"
+          "b"
+        ];
+        enable = true;
+      };
+      git = {
+        __profiles__ = {
+          enable = true;
+          name = "John Doe";
+        };
+      };
+    };
+    services = {
+      openssh = {
+        customList = [
+          "a"
+        ];
+        customList2 = [ ];
+        customList3 = [ ];
+        customList4 = [
+          "mkMerge"
+        ];
+        enable = true;
+        enableCustom = true;
+      };
+    };
+  };
+}

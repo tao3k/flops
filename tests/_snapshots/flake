@@ -1,0 +1,28 @@
+#pretty
+{
+  exampleFlake = {
+    packages = {
+      x86_64-darwin = {
+        firefox = <derivation firefox-112.0.2>;
+      };
+      x86_64-linux = {
+        firefox = <derivation firefox-112.0.2>;
+      };
+    };
+  };
+  outputs = {
+    flake-compat = {
+      lastModified = 1683211519;
+      lastModifiedDate = "20230504144519";
+      narHash = "sha256-/PpdA67EEsOQafiS3snVbQ0uCfu/ZmcB5mkGjrXlvmo=";
+      outPath = "/nix/store/7l3qc8z1zcvbiwidggw5bhnl5w0a9m4k-source";
+      rev = "fe6baef74f390a1d63b22f0be33ac95a4101cca5";
+      shortRev = "fe6baef";
+    };
+    nixlib = {
+      lib = {
+        func = <function>;
+      };
+    };
+  };
+}

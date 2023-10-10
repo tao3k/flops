@@ -1,0 +1,60 @@
+{
+  "nodes": {
+    "call-flake": {
+      "locked": {
+        "lastModified": 1686448809,
+        "narHash": "sha256-Cc+Krf2Ar5NjFMxUWaJFOAQkj8s40r6iEJwIfbxa0Vc=",
+        "owner": "divnix",
+        "repo": "call-flake",
+        "rev": "a0b97f9c6d21997fe5f1ff9a5eedc05a7935a917",
+        "type": "github"
+      },
+      "original": {
+        "owner": "divnix",
+        "repo": "call-flake",
+        "type": "github"
+      }
+    },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1686890976,
+        "narHash": "sha256-/PpdA67EEsOQafiS3snVbQ0uCfu/ZmcB5mkGjrXlvmo=",
+        "owner": "gtrunsec",
+        "repo": "flake-compat",
+        "rev": "eba2496406651535078e89b4b2dae1d9adef6b37",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gtrunsec",
+        "ref": "lockFile",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "nosys": {
+      "locked": {
+        "lastModified": 1683048500,
+        "narHash": "sha256-jSCjAy+MEbZZ7Iv92iVJeLuwm90J83RouXFOPSxr05g=",
+        "owner": "divnix",
+        "repo": "nosys",
+        "rev": "52ff559e63d4d8e2a3a0cfbc50a7b2a4361d9101",
+        "type": "github"
+      },
+      "original": {
+        "owner": "divnix",
+        "repo": "nosys",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "call-flake": "call-flake",
+        "flake-compat": "flake-compat",
+        "nosys": "nosys"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

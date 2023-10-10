@@ -1,0 +1,15 @@
+#pretty
+{
+  home-manager = {
+    success = true;
+    value = {
+      modules = [ ];
+    };
+  };
+  nixos = {
+    success = true;
+    value = {
+      modules = [ ];
+    };
+  };
+}

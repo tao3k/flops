@@ -1,0 +1,28 @@
+{
+  "nodes": {
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1683211519,
+        "narHash": "sha256-/PpdA67EEsOQafiS3snVbQ0uCfu/ZmcB5mkGjrXlvmo=",
+        "owner": "gtrunsec",
+        "repo": "flake-compat",
+        "rev": "fe6baef74f390a1d63b22f0be33ac95a4101cca5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gtrunsec",
+        "ref": "lockFile",
+        "repo": "flake-compat",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-compat": "flake-compat"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}

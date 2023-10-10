@@ -1,0 +1,68 @@
+#+TITLE: README
+#+AUTHOR: GuangTao Zhang
+#+EMAIL: gtrunsec@hardenedlinux.org
+#+DATE: 2023-05-03 Wed 05:53
+
+powered by [[https://github.com/divnix/POP/blob/main/POP.md][POP: Pure Object Prototypes]] && [[https://github.com/nix-community/haumea][haumea]]
+
+ ~A nix language configuration framework based on POP: Pure Object~
+
+if you want to understand this repo how works and use cases easily, just read the tests and expressions directly. For having a human-readable test set, the problem of complexity wouldn't exist anymore.
+
+- snapshots : https://github.com/GTrunSec/flops/blob/master/tests/_snapshots/haumea
+- expr: https://github.com/GTrunSec/flops/blob/master/tests/haumea/expr.nix
+
+* bye bye, a bloated flake inputs
+
+We could avoid putting all the inputs in the main flake.nix
+
+- use the ~flake.pops.default~ to load a subflake.
+
+#+begin_src nix
+callInputs =
+  (flops.lib.flake.pops.default.setInitInputs ./lib/__lock)
+    .setSystem
+    "x86_64-linux";
+#+end_src
+
+* Merge
+
+** dmerge
+
+you can't use the dmerge for the nixosModules
+
+- David Arnold (blaggacao) said
+#+begin_quote
+dmerge can only work with json-serializable data on both sides. That's by design.
+#+end_quote
+
+#+begin_src nix :async :exports both :results output
+  test = with dmerge;
+    merge {
+      a.b.c = [];
+      a.c = lib.mkOption {
+        type = lib.types.submodule {
+          freeformType = lib.types.attrs;
+          options = {
+            enable = lib.mkEnableOption (lib.mdDoc "Whether to enable git profile");
+          };
+        };
+      };
+    } {a.b.c = append ["a" "b" "c"];};
+
+  testNonMerge =
+    {
+      a.b.c = [];
+      a.c = lib.mkOption {
+        type = lib.types.submodule {
+          freeformType = lib.types.attrs;
+          options = {
+            enable = lib.mkEnableOption (lib.mdDoc "Whether to enable git profile");
+          };
+        };
+      };
+    }
+    // {d = "d";};
+#+end_src
+
+ So, we use *withoutMergedOptions* to keep the native options after the action of merged.

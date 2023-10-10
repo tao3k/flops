@@ -1,0 +1,25 @@
+name: "CI"
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+jobs:
+  nix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: nixbuild/nix-quick-install-action@v25
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Run Flake Show
+        run: nix -Lv flake show --override-input namaka github:nix-community/namaka
+
+      - name: Run Eval check
+        run: nix -Lv eval ./local#checks --override-input namaka github:nix-community/namaka
+
+      - name: Run Format Check
+        run: nix develop ./local --command treefmt -- . --fail-on-change --no-cache
