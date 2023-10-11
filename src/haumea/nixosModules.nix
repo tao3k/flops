@@ -85,8 +85,7 @@ let
                   );
 
                 moduleArgs = baseModuleArgs // {
-                  loadSubmodule =
-                    path: (mkExtenders (builtins.scopedImport baseModuleArgs path) path);
+                  loadSubmodule = path: (mkExtenders (callModuleLazily baseModuleArgs path) path);
                 };
 
                 callArgsLazily =
