@@ -73,6 +73,8 @@ let
                         opt = l.attrByPath (relModulePathWithoutDefault path) { } options;
                         inherit mkModulePath;
                         moduleArgs = config._module.args // config._module.specialArgs;
+                        # override the self for the module
+                        self = inputs.self { };
                       }
                       //
                         l.optionalAttrs
