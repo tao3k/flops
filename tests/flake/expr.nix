@@ -50,9 +50,9 @@ let
           ))
         ]
       )
-    ).outputs;
+    ).inputs;
 in
 {
   exampleFlake = exampleFlake.outputs exampleFlake.inputs;
-  outputs = outputs ./__lock;
+  inputs = outputs ./__lock;
 }

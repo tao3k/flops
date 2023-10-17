@@ -16,10 +16,8 @@ let
     mergeToDepth
     foldl
     filter
-    call-flake-override
+    deSystemize
   ;
-
-  __inputs__ = (call-flake ../__lib/__lock).inputs;
 in
 {
   inputsExtender = pop {
@@ -27,7 +25,10 @@ in
       initInputs = { };
       inputs = { };
       sysInputs = { };
-      overrideInputs = { };
+      initFlake = {
+        inputs = { };
+        outputs = { };
+      };
     };
     extension = self: super: {
       setInitInputs =
@@ -35,14 +36,16 @@ in
           initInputs:
           extendPop self (
             self: super: {
-              initInputs =
+              initFlake =
                 if (lib.isPath initInputs || lib.isString initInputs) then
-                  call-flake-override initInputs self.overrideInputs
+                  call-flake initInputs
                 else if lib.hasAttr "outPath" initInputs then
-                  call-flake-override initInputs.outPath self.overrideInputs
+                  call-flake initInputs.outPath
                 else
-                  initInputs
+                  super.initFlake
               ;
+              initInputs =
+                if self.initFlake == { } then initInputs else self.initFlake.inputs;
             }
           )
         );
@@ -100,9 +103,7 @@ in
     extension =
       self: super:
       let
-        deSysInputs =
-          mapAttrs (_: input: __inputs__.nosys.lib.deSys self.system input)
-            extendedInputs;
+        deSysInputs = mapAttrs (_: input: deSystemize self.system input) extendedInputs;
 
         extendedInputs =
           foldl
@@ -244,11 +245,11 @@ in
             )
             (
               systems:
-              foldl (attrs: system: mergeToDepth 3 attrs (self.outputsForSystem system)) { }
-                systems
+              lib.recursiveUpdate self.initFlake.outputs (
+                foldl (attrs: system: mergeToDepth 3 attrs (self.outputsForSystem system)) { }
+                  systems
+              )
             );
-
-        outputs = self.inputs;
       };
   };
 }

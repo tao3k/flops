@@ -10,7 +10,7 @@
       };
     };
   };
-  outputs = {
+  inputs = {
     flake-compat = {
       lastModified = 1683211519;
       lastModifiedDate = "20230504144519";

@@ -134,7 +134,7 @@ let
                 if (extender ? setInit) then
                   (extender.setInit self.initLoad).load
                 else
-                  extender.load
+                  extender.load or { }
               ;
             in
             l.recursiveMerge ([
