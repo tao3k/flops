@@ -24,9 +24,7 @@ let
       ]).addExporters
         [
           (POP.lib.extendPop pops.exporter (
-            self: _: {
-              exports.packages.firefox = self.inputs.nixpkgs.legacyPackages.firefox;
-            }
+            self: _: { exports.packages.firefox = self.inputs.nixpkgs.firefox; }
           ))
         ]
       ).outputsForSystems

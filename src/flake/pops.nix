@@ -103,7 +103,16 @@ in
     extension =
       self: super:
       let
-        deSysInputs = mapAttrs (_: input: deSystemize self.system input) extendedInputs;
+        deSysInputs =
+          mapAttrs
+            (
+              name: input:
+              if (name == "nixpkgs" && input ? legacyPackages && self.system != "") then
+                (deSystemize self.system input).legacyPackages
+              else
+                deSystemize self.system input
+            )
+            extendedInputs;
 
         extendedInputs =
           foldl
