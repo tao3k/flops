@@ -2,7 +2,18 @@
 {
   exports = {
     success = true;
-    value = { };
+    value = {
+      default = {
+        programs = {
+          emacs = <function, args: {config?, options?}>;
+          git = <function, args: {config?, options?}>;
+        };
+        services = {
+          openssh = <function, args: {config?, options?}>;
+        };
+      };
+      outputs = <function>;
+    };
   };
   outputs = {
     success = true;

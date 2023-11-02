@@ -28,6 +28,25 @@
           };
         };
       };
+      default = {
+        data = {
+          foo = "baz";
+        };
+        treefmt = {
+          formatter = {
+            nix = {
+              command = "alejandra";
+              excludes = [ ];
+            };
+          };
+          prettier = {
+            includes = [
+              "*.toml"
+            ];
+          };
+        };
+      };
+      outputs = <function>;
     };
   };
   outputs = {

@@ -116,7 +116,12 @@ let
               { }
               self.exporters;
         in
-        generalExporters;
+        generalExporters
+        // {
+          default = self.layouts.default;
+          outputs = self.outputs;
+        }
+      ;
 
       # -- exportersExtener --
       addExporter = exporter: self.addExporters [ exporter ];
@@ -189,11 +194,11 @@ let
           )
           (
             x:
-            if self.layouts ? __extenders then
-              self.layouts.__extenders x
+            if self.layouts ? __extender then
+              self.layouts.__extender x
             else if l.isFunction x then
               x self.layouts.default
-            else if x != { } then
+            else if (x != { } && (!self.layouts ? __extender)) then
               dmerge.merge self.layouts.default x
             else
               self.layouts.default

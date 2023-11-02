@@ -91,18 +91,17 @@ let
       [
         (extendPop pops.exporter (
           self: super: {
-            exports.customModules = self.outputs.__extenders [ {
+            exports.customModules = self.outputs [ {
               value =
                 { selfModule' }:
                 selfModule' (
                   m:
                   dmerge m {
                     config.services.openssh.enable = false;
-                    config.services.openssh.customList = [ "1" ];
+                    config.services.openssh.customList = with dmerge; append [ "1" ];
                     imports = with dmerge; append [ ];
                   }
                 );
-
               path = [
                 "services"
                 "openssh"
@@ -115,8 +114,8 @@ let
   evalModules = l.evalModules {
     modules = [
       g.exports.customModules.services.openssh
-      g.outputs.default.programs.emacs
-      g.outputs.default.programs.git
+      # g.outputs.default.programs.emacs
+      # g.outputs.default.programs.git
     ];
   };
 

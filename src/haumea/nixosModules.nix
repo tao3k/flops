@@ -45,7 +45,7 @@ let
 
   base =
     {
-      extenders ? [ ],
+      extender ? [ ],
     }:
     haumea.lib.load {
       inherit (cfg) src inputs;
@@ -119,7 +119,7 @@ let
                             if isModule then relModulePathWithoutDefault path else relModulePath path
                           )
                         )
-                        extenders;
+                        extender;
 
                     foundItem =
                       if (builtins.length filteredList) > 0 then
@@ -180,7 +180,7 @@ let
 in
 {
   default = base { };
-  __extenders = extenders: base { inherit extenders; };
+  __extender = extender: base { inherit extender; };
 }
 // l.optionalAttrs (cfg.type == "nixosModules") { nixosModules = base { }; }
 // l.optionalAttrs (cfg.type == "nixosProfiles") { nixosProfiles = base { }; }
