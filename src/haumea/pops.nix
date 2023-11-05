@@ -142,8 +142,7 @@ let
                   extender.load or { }
               ;
             in
-            l.recursiveMerge ([
-              # NOTE: put the ext' first so that the initLoad is the last to be merged
+            l.recursiveMerge' ([
               acc
               ext'
             ])
