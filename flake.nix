@@ -4,7 +4,7 @@
     POP.url = "github:divnix/POP";
     POP.inputs.nixpkgs.follows = "";
     POP.inputs.flake-compat.follows = "";
-    yants.url = "github:divnix/yants";
+    yants.url = "github:divnix/yants/?ref=refs/pull/5/head";
 
     haumea.url = "github:nix-community/haumea";
     haumea.inputs.nixpkgs.follows = "nixlib";

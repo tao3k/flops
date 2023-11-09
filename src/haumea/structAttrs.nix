@@ -43,6 +43,11 @@ let
 
       addExporters = function;
       addExporter = function;
+      load = attrs any;
+      initLoad = struct "haumea.load" structAttrs.haumeaLoad;
+
+      outputs = function;
+      layouts = attrs any;
     };
 
     haumeaExporterPop = structAttrs.pop // {
@@ -52,7 +57,6 @@ let
       setLoad = function;
       setOutputs = function;
     };
-
     haumeaLoad = {
       src = either path string;
       transformer = either function (list any);
@@ -68,9 +72,17 @@ let
           ]
           "type";
     };
+
+    haumeaLoadExtender = {
+      load = structOption "haumea.load" structAttrs.haumeaLoad;
+    };
+
+    haumeaLoadExtenderPop = structAttrs.pop // structAttrs.haumeaInitLoadPop;
+
     haumeaLoadPop = structAttrs.pop // structAttrs.haumeaLoad;
     haumeaInitLoadPop = structAttrs.pop // rec {
       initLoad = struct "haumea.load" structAttrs.haumeaLoad;
+      load = structAttrs.haumeaLoadExtender.load;
       #list (either function any);
       setInit = function;
     };

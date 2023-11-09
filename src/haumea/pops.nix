@@ -155,7 +155,7 @@ let
         defun
           (
             with types; [
-              (either haumeaInitLoadPop (attrs any))
+              (either haumeaLoadExtenderPop haumeaLoadExtender)
               haumeaDefaultPop
             ]
           )
@@ -165,7 +165,7 @@ let
         defun
           (
             with types; [
-              (either (list haumeaInitLoadPop) (list (attrs any)))
+              (either (list haumeaLoadExtenderPop) (list haumeaLoadExtender))
               haumeaDefaultPop
             ]
           )
