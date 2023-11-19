@@ -106,7 +106,9 @@ let
                 let
                   ex' =
                     if extender ? setOutputs then
-                      ((extender.setOutputs self.outputs).setLayouts self.layouts).exports
+                      ((extender.setOutputs self.outputs).setLayouts (
+                        self.layouts // { inherit self; }
+                      )).exports
                     else
                       extender.exports
                   ;

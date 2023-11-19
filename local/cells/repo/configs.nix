@@ -12,6 +12,8 @@ with inputs.std.inputs.dmerge; {
     commit.conventional.scopes = append [
       "nixosModules"
       "yants"
+      "haumea"
+      "*"
     ];
   };
 }
