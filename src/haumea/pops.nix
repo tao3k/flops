@@ -22,6 +22,7 @@ let
         src = ./.;
         loader = haumea.lib.loaders.default;
         inputs = { };
+        inputsTransformer = [ ];
         transformer = [ ];
         type = "default";
       };
@@ -63,10 +64,15 @@ let
             extendPop self (
               self: super: {
                 load = {
-                  inherit (load) loader transformer type;
+                  inherit (load)
+                    loader
+                    transformer
+                    type
+                    inputsTransformer
+                  ;
                   src =
                     if l.isString load.src then l.unsafeDiscardStringContext load.src else load.src;
-                  inputs = l.removeAttrs load.inputs [ "self" ];
+                  inputs = lib.pipe load.inputs load.inputsTransformer;
                 };
               }
             )
@@ -133,25 +139,28 @@ let
 
       # -- load --
       load =
-        l.foldl
-          (
-            acc: extender:
-            let
-              ext' =
-                if (extender ? setInit) then
-                  (extender.setInit self.initLoad).load
-                else
-                  extender.load or { }
-              ;
-            in
-            l.recursiveMerge' ([
-              acc
-              ext'
-            ])
-          )
-          self.initLoad
-          self.loadExtenders;
-
+        let
+          cfg =
+            l.foldl
+              (
+                acc: extender:
+                let
+                  ext' =
+                    if (extender ? setInit) then
+                      (extender.setInit self.initLoad).load
+                    else
+                      extender.load or { }
+                  ;
+                in
+                l.recursiveMerge' ([
+                  acc
+                  ext'
+                ])
+              )
+              self.initLoad
+              self.loadExtenders;
+        in
+        (exporter.setLoad cfg).load;
       # -- loadExtenders --
       addLoadExtender =
         defun
@@ -208,7 +217,7 @@ let
       layouts =
         (
           let
-            cfg = (exporter.setLoad self.load).load;
+            cfg = self.load;
             haumeaOutputs =
               if
                 (l.elem cfg.type [
@@ -219,7 +228,14 @@ let
               then
                 nixosModules { inherit cfg; }
               else
-                { default = haumea.lib.load (l.removeAttrs cfg [ "type" ]); }
+                {
+                  default = haumea.lib.load (
+                    l.removeAttrs cfg [
+                      "type"
+                      "inputsTransformer"
+                    ]
+                  );
+                }
             ;
           in
           haumeaOutputs // (l.removeAttrs self.exports [ "default" ])

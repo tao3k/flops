@@ -60,6 +60,7 @@ let
     haumeaLoad = {
       src = either path string;
       transformer = either function (list any);
+      inputsTransformer = either function (list any);
       inputs = attrs any;
       loader = either function (list any);
       type =

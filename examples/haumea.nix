@@ -44,15 +44,20 @@ let
   };
 
   c =
-    ((b.addLoadExtender { src = ../tests/haumeaData/__data; }).addLoadExtender (
-      extendPop pops.loadExtender (
-        self: super: {
-          load = {
-            loader = [ (matchers.nix loaders.scoped) ];
-          };
-        }
+    ((b.addLoadExtender {
+      load.src = ../tests/haumeaData/__data;
+      load.inputsTransformer = [ (x: (x // { a = "1"; })) ];
+    }).addLoadExtender
+      (
+        extendPop pops.loadExtender (
+          self: super: {
+            load = {
+              loader = [ (matchers.nix loaders.scoped) ];
+            };
+          }
+        )
       )
-    )).addExporters
+    ).addExporters
       [
         (extendPop pops.exporter (
           self: super: {
