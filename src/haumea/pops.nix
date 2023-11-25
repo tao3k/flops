@@ -124,11 +124,11 @@ let
               { }
               self.exporters;
         in
-        generalExporters
-        // {
+        {
           default = self.layouts.default;
           outputs = self.outputs;
         }
+        // generalExporters
       ;
 
       # -- exportersExtener --
