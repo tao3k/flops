@@ -72,7 +72,9 @@ let
                   ;
                   src =
                     if l.isString load.src then l.unsafeDiscardStringContext load.src else load.src;
-                  inputs = lib.pipe load.inputs load.inputsTransformer;
+                  inputs = lib.pipe load.inputs (
+                    load.inputsTransformer ++ [ (x: x // { loadSrc = self.load.src; }) ]
+                  );
                 };
               }
             )
