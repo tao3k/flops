@@ -152,7 +152,7 @@ let
                       ({
                         config =
                           if module ? config then
-                            fun module.config
+                            module.config
                           else
                             fun (
                               removeAttrs module [
