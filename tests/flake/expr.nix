@@ -38,15 +38,11 @@ let
     (
       (((pops.default.setInitInputs inputs).setSystem "x86_64-linux")
       .addInputsExtenders
-        [
-          (POP.lib.extendPop pops.inputsExtender (
-            self: super: {
-              inputs = {
-                nixlib.lib.func = lib.isFunction;
-              };
-            }
-          ))
-        ]
+        [ {
+          inputs = {
+            nixlib.lib.func = lib.isFunction;
+          };
+        } ]
       )
     ).inputs;
 in

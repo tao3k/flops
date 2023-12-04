@@ -49,8 +49,6 @@ in
             }
           )
         );
-      setOverrideInputs =
-        (overrideInputs: extendPop self (self: super: { inherit overrideInputs; }));
     };
   };
 
@@ -97,7 +95,6 @@ in
     ];
     defaults = {
       inputsExtenders = [ ];
-      inputsOverrideExtenders = [ ];
       exporters = [ ];
     };
     extension =
@@ -119,7 +116,12 @@ in
             (
               cinputs: extender:
               let
-                ext' = extender.setInitInputs self.initInputs;
+                ext' =
+                  if extender ? setInitInputs then
+                    extender.setInitInputs self.initInputs
+                  else
+                    extender
+                ;
               in
               mergeToDepth 3 cinputs ext'.inputs
             )
@@ -127,18 +129,6 @@ in
             self.inputsExtenders;
       in
       {
-        overrideInputs =
-          foldl
-            (
-              acc: ext:
-              let
-                ext' = ext.setInitInputs extendedInputs;
-              in
-              acc // ext'.overrideInputs
-            )
-            { }
-            self.inputsOverrideExtenders;
-
         sysInputs = extendedInputs;
 
         inputs = deSysInputs;
@@ -158,47 +148,30 @@ in
             general = foldExporters self.generalExporters;
           };
 
-        addInputsOverrideExtenders =
-          (
-            inputsOverrideExtenders:
-            extendPop self (
-              self: super: {
-                inputsOverrideExtenders =
-                  super.inputsOverrideExtenders ++ inputsOverrideExtenders;
-              }
-            )
-          );
-
-        addInputsOverrideExtender =
-          (
-            inputsOverrideExtender:
-            self.addInputsOverrideExtenders [ inputsOverrideExtender ]
-          );
-
         addInputsExtenders =
-          defun
-            (
-              with types; [
-                (list inputsExtenderPop)
-                flakePop
-              ]
+          # defun
+          #   (
+          #     with types; [
+          #       (list inputsExtenderPop)
+          #       flakePop
+          #     ]
+          #   )
+          (
+            inputsExtenders:
+            extendPop self (
+              self: super: { inputsExtenders = super.inputsExtenders ++ inputsExtenders; }
             )
-            (
-              inputsExtenders:
-              extendPop self (
-                self: super: { inputsExtenders = super.inputsExtenders ++ inputsExtenders; }
-              )
-            );
+          );
 
         addInputsExtender =
-          defun
-            (
-              with types; [
-                inputsExtenderPop
-                flakePop
-              ]
-            )
-            (inputsExtender: self.addInputsExtenders [ inputsExtender ]);
+          # defun
+          #   (
+          #     with types; [
+          #       (either inputsExtenderPop (attrs any))
+          #       flakePop
+          #     ]
+          #   )
+          (inputsExtender: self.addInputsExtenders [ inputsExtender ]);
 
         addExporters =
           defun
