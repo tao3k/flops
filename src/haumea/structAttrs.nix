@@ -70,6 +70,7 @@ let
             "default"
             "nixosProfiles"
             "evalModules"
+            "nixosProfilesOmnibus"
           ]
           "type";
     };

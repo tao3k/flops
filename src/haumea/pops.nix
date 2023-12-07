@@ -226,6 +226,7 @@ let
                   "nixosModules"
                   "nixosProfiles"
                   "evalModules"
+                  "nixosProfilesOmnibus"
                 ])
               then
                 nixosModules { inherit cfg; }

@@ -1,7 +1,12 @@
-{ yants, root }:
+{ yants, super }:
 with (yants "flops"); {
-  pop = openStruct root.flake.structAttrs.pop;
-  exporterPop = openStruct root.flake.structAttrs.exporterPop;
-  inputsExtenderPop = openStruct root.flake.structAttrs.inputsExtenderPop;
-  flakePop = openStruct root.flake.structAttrs.flakePop;
+  pop = openStruct super.structAttrs.pop;
+  exporterPop = openStruct super.structAttrs.exporterPop;
+
+  inputsExtenderPop =
+    openStruct "inputsExtenderPop"
+      super.structAttrs.inputsExtenderPop;
+  inputsExtender = struct "inputsExtender" super.structAttrs.inputsExtender;
+
+  flakePop = openStruct super.structAttrs.flakePop;
 }

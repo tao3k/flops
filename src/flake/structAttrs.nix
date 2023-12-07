@@ -23,8 +23,14 @@ let
 
     inputsExtenderPop = structAttrs.pop // {
       initInputs = attrs any;
+      initFlake = attrs any;
+      sysInputs = attrs any;
       inputs = attrs any;
       setInitInputs = function;
+    };
+
+    inputsExtender = {
+      inputs = attrs any;
     };
 
     flakePop =
@@ -32,7 +38,7 @@ let
       // structAttrs.inputsExtenderPop
       // {
         exporters = list types.exporterPop;
-        inputsExtenders = list types.inputsExtenderPop;
+
         system = string;
 
         exports = attrs any;

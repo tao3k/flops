@@ -24,6 +24,7 @@ let
       (mapAttrs (name: _: inputs.${name}))
       f
     ];
+
   callModuleLazily =
     inputs: path:
     let
@@ -31,6 +32,7 @@ let
       f = toFunction (importer path);
     in
     lazyArgsPerParameter f inputs;
+
   removeFileSuffix = l.removeSuffix ".nix";
   removeDefault = l.removeSuffix "/default";
   relModulePathWithoutDefault = relModulePathWithoutDefault' removeDefault;
@@ -42,6 +44,17 @@ let
         extraFun (removeFileSuffix (l.last (l.splitString cfg.src (toString path))))
       )
     ));
+
+  isTopLevel =
+    path:
+    if
+      l.length (l.splitString "/" (l.last (l.splitString cfg.src (toString path))))
+      == 2
+    then
+      true
+    else
+      false
+  ;
 
   base =
     {
@@ -57,119 +70,115 @@ let
             (
               let
                 module =
-                  {
-                    config ? { },
-                    options ? { },
-                    ...
-                  }@args:
-                  let
-                    mkModulePath =
-                      attrs': l.setAttrByPath (relModulePathWithoutDefault path) attrs';
-                    test = config._module.args.pkgs or { };
-                    baseModuleArgs =
-                      (
-                        inputs
-                        // args
-                        // (
-                          {
+                  if (isTopLevel path) && cfg.type == "nixosProfilesOmnibus" then
+                    callModuleLazily inputs path
+                  else
+                    {
+                      config ? { },
+                      options ? { },
+                      ...
+                    }@args:
+                    let
+                      mkModulePath =
+                        attrs': l.setAttrByPath (relModulePathWithoutDefault path) attrs';
+                      test = config._module.args.pkgs or { };
+                      baseModuleArgs =
+                        (
+                          inputs
+                          // args
+                          // ({
                             cfg = l.attrByPath (relModulePathWithoutDefault path) { } config;
                             opt = l.attrByPath (relModulePathWithoutDefault path) { } options;
                             inherit mkModulePath;
                             moduleArgs = config._module.args // config._module.specialArgs;
                             # override the self for the module
                             self = inputs.self { };
-                          }
-                          //
-                            l.optionalAttrs
-                              (l.elem cfg.type [
-                                "nixosModules"
-                                "nixosProfiles"
-                              ])
-                              { pkgs = config._module.args.pkgs; }
-                        )
-                      );
+                            pkgs = config._module.args.pkgs;
+                          })
+                        );
 
-                    moduleArgs = baseModuleArgs // {
-                      loadSubmodule = path: (mkExtenders (callModuleLazily baseModuleArgs path) path);
-                    };
+                      moduleArgs = baseModuleArgs // {
+                        loadSubmodule = path: (mkExtender (callModuleLazily baseModuleArgs path) path);
+                      };
 
-                    callArgsLazily =
-                      attrs: extraArgs:
-                      if (l.isFunction attrs) then
-                        lazyArgsPerParameter attrs (moduleArgs // extraArgs)
-                      else
-                        attrs
-                    ;
+                      callArgsLazily =
+                        attrs: extraArgs:
+                        if (l.isFunction attrs) then
+                          lazyArgsPerParameter attrs (moduleArgs // extraArgs)
+                        else
+                          attrs
+                      ;
 
-                    s3 = callModuleLazily moduleArgs path;
-                    # => { config = { }; imports = [... ]; _file }
-                    s3final =
-                      let
-                        s3Module = mkExtenders (winnow path s3 mkModulePath) path;
-                        s3Profile = mkExtenders s3 path;
-                      in
-                      if isModule then s3Module else s3Profile;
-
-                    mkExtenders =
-                      module: path:
-                      let
-                        removedOptionModule = removeAttrs module [ "options" ];
-                        filteredList =
-                          l.filter
-                            (
-                              item:
-                              item.path == (
-                                if isModule then relModulePathWithoutDefault path else relModulePath path
+                      mkExtender =
+                        module: path:
+                        let
+                          removedOptionModule = removeAttrs module [ "options" ];
+                          filteredList =
+                            l.filter
+                              (
+                                item:
+                                item.path == (
+                                  if isModule then relModulePathWithoutDefault path else relModulePath path
+                                )
                               )
-                            )
-                            extender;
+                              extender;
 
-                        foundItem =
-                          if (builtins.length filteredList) > 0 then
-                            (builtins.head filteredList)
-                          else
-                            [ ]
-                        ;
+                          foundItem =
+                            if (builtins.length filteredList) > 0 then
+                              (builtins.head filteredList)
+                            else
+                              [ ]
+                          ;
 
-                        loadExtendModuleFromValue =
-                          if foundItem != [ ] then
-                            (callArgsLazily foundItem.value {
-                              selfModule = module;
-                              # add the options back in
-                              # dmerge self' {}
-                              selfModule' = x: module // (x removedOptionModule);
-                              # add dmerge support
-                              inherit dmerge;
-                            })
-                          else
-                            module
-                        ;
-                      in
-                      loadExtendModuleFromValue;
+                          loadExtendModuleFromValue =
+                            if foundItem != [ ] then
+                              (callArgsLazily foundItem.value {
+                                selfModule = module;
+                                # add the options back in
+                                # dmerge self' {}
+                                selfModule' = x: module // (x removedOptionModule);
+                                # add dmerge support
+                                inherit dmerge;
+                              })
+                            else
+                              module
+                          ;
+                        in
+                        loadExtendModuleFromValue;
 
-                    winnow =
-                      path: module: fun:
-                      ({
-                        config =
-                          if module ? config then
-                            module.config
-                          else
-                            fun (
-                              removeAttrs module [
-                                "options"
-                                "imports"
-                              ]
-                            )
-                        ;
-                        imports = module.imports or [ ];
-                      })
-                      // {
-                        _file = path;
-                        options = fun module.options or { };
-                      }
-                    ;
-                  in
-                  s3final;
+                      winnow =
+                        path: module: fun:
+                        ({
+                          config =
+                            if module ? config then
+                              module.config
+                            else
+                              fun (
+                                removeAttrs module [
+                                  "options"
+                                  "imports"
+                                ]
+                              )
+                          ;
+                          imports = module.imports or [ ];
+                        })
+                        // {
+                          _file = path;
+                          options = fun module.options or { };
+                        }
+                      ;
+
+                      callDefaultModule = callModuleLazily moduleArgs path;
+                      # => { config = { }; imports = [... ]; _file }
+                      finalModule =
+                        let
+                          extendedModule = mkExtender (winnow path callDefaultModule mkModulePath) path;
+                          extendedProfile = mkExtender callDefaultModule path;
+                        in
+                        if isModule then extendedModule else extendedProfile;
+                    in
+                    finalModule
+                ;
               in
               module
             )
@@ -189,5 +198,3 @@ in
   default = base { };
   __extender = extender: base { inherit extender; };
 }
-// l.optionalAttrs (cfg.type == "nixosModules") { nixosModules = base { }; }
-// l.optionalAttrs (cfg.type == "nixosProfiles") { nixosProfiles = base { }; }

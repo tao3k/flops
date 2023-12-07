@@ -152,7 +152,7 @@ in
           # defun
           #   (
           #     with types; [
-          #       (list inputsExtenderPop)
+          #       (either (list inputsExtenderPop) (list inputsExtender))
           #       flakePop
           #     ]
           #   )
@@ -164,14 +164,14 @@ in
           );
 
         addInputsExtender =
-          # defun
-          #   (
-          #     with types; [
-          #       (either inputsExtenderPop (attrs any))
-          #       flakePop
-          #     ]
-          #   )
-          (inputsExtender: self.addInputsExtenders [ inputsExtender ]);
+          defun
+            (
+              with types; [
+                (either inputsExtender inputsExtenderPop)
+                flakePop
+              ]
+            )
+            (inputsExtender: self.addInputsExtenders [ inputsExtender ]);
 
         addExporters =
           defun
