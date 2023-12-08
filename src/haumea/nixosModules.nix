@@ -182,7 +182,7 @@ let
                       finalModule =
                         let
                           extendedModule = mkExtender (winnow path callDefaultModule mkModulePath) path;
-                          extendedProfile = mkExtender callDefaultModule path;
+                          extendedProfile = mkExtender (winnow path callDefaultModule lib.id) path;
                         in
                         if isModule then extendedModule else extendedProfile;
                     in
