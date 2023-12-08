@@ -33,6 +33,13 @@ let
     in
     lazyArgsPerParameter f inputs;
 
+  callModuleLazily' =
+    inputs: path: importer:
+    let
+      f = toFunction (importer path);
+    in
+    lazyArgsPerParameter f inputs;
+
   removeFileSuffix = l.removeSuffix ".nix";
   removeDefault = l.removeSuffix "/default";
   relModulePathWithoutDefault = relModulePathWithoutDefault' removeDefault;
@@ -101,14 +108,6 @@ let
                         loadSubmodule = path: (mkExtender (callModuleLazily baseModuleArgs path) path);
                       };
 
-                      callArgsLazily =
-                        attrs: extraArgs:
-                        if (l.isFunction attrs) then
-                          lazyArgsPerParameter attrs (moduleArgs // extraArgs)
-                        else
-                          attrs
-                      ;
-
                       mkExtender =
                         module: path:
                         let
@@ -130,9 +129,19 @@ let
                               [ ]
                           ;
 
+                          callValueModuleLazily =
+                            v: extraArgs:
+                            if (l.isFunction v) then
+                              lazyArgsPerParameter v (moduleArgs // extraArgs)
+                            else if (l.isPath v) then
+                              callModuleLazily' (moduleArgs // extraArgs) v import
+                            else
+                              v
+                          ;
+
                           loadExtendModuleFromValue =
                             if foundItem != [ ] then
-                              (callArgsLazily foundItem.value {
+                              (callValueModuleLazily foundItem.value {
                                 selfModule = module;
                                 # add the options back in
                                 # dmerge self' {}
