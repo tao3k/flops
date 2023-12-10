@@ -241,7 +241,7 @@ let
                 }
             ;
           in
-          haumeaOutputs // (l.removeAttrs self.exports [ "default" ])
+          haumeaOutputs
         );
     };
   };
