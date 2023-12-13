@@ -58,7 +58,9 @@ let
       setOutputs = function;
     };
     haumeaLoad = {
-      src = either path string;
+      src = either path (
+        either string (openStruct "srcAttrs" { outPath = either path string; })
+      );
       transformer = either function (list any);
       inputsTransformer = either function (list any);
       inputs = attrs any;
