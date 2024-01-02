@@ -25,20 +25,8 @@ let
       f
     ];
 
-  callModuleLazily =
-    inputs: path:
-    let
-      importer = l.scopedImport inputs;
-      f = toFunction (importer path);
-    in
-    lazyArgsPerParameter f inputs;
-
-  callModuleLazily' =
-    inputs: path: importer:
-    let
-      f = toFunction (importer path);
-    in
-    lazyArgsPerParameter f inputs;
+  callModuleLazily = haumea.lib.loaders.scoped;
+  callModuleLazily' = haumea.lib.loaders.default;
 
   removeFileSuffix = l.removeSuffix ".nix";
   removeDefault = l.removeSuffix "/default";
@@ -134,7 +122,7 @@ let
                             if (l.isFunction v) then
                               lazyArgsPerParameter v (moduleArgs // extraArgs)
                             else if (l.isPath v) then
-                              callModuleLazily' (moduleArgs // extraArgs) v import
+                              callModuleLazily' (moduleArgs // extraArgs) v
                             else
                               v
                           ;
