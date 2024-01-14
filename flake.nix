@@ -2,9 +2,12 @@
   inputs = {
     nixlib.url = "github:nix-community/nixpkgs.lib";
     POP.url = "github:divnix/POP";
+    POP.inputs.nixlib.follows = "nixlib";
     POP.inputs.nixpkgs.follows = "";
     POP.inputs.flake-compat.follows = "";
+
     yants.url = "github:divnix/yants/?ref=refs/pull/5/head";
+    yants.inputs.nixpkgs.follows = "nixlib";
 
     haumea.url = "github:nix-community/haumea";
     haumea.inputs.nixpkgs.follows = "nixlib";
