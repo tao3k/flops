@@ -1,32 +1,37 @@
 {
   description = "Flops";
 
-  inputs.std.follows = "std-ext/std";
-  inputs.nixpkgs.follows = "std-ext/nixpkgs";
-  inputs.std-ext.url = "github:gtrunsec/std-ext";
+  inputs.omnibus.url = "github:gtrunsec/omnibus";
   inputs.call-flake.url = "github:divnix/call-flake";
   inputs.namaka.follows = "";
 
   outputs =
-    { std, ... }@inputs:
+    { ... }@inputs:
     let
+      inherit (inputs.omnibus.flake.inputs) std nixpkgs;
       main = inputs.call-flake ../.;
     in
     std.growOn
       {
-        inherit inputs;
+        inputs = inputs // {
+          inherit std nixpkgs;
+        };
         cellsFrom = ./cells;
         cellBlocks = with std.blockTypes; [
           # Development Environments
-          (nixago "configs")
-          (devshells "devshells")
+          (nixago "nixago")
+          (functions "pops")
+          (devshells "shells")
+          (data "configs")
         ];
       }
       {
-        devShells = std.harvest inputs.self [ [
-          "repo"
-          "devshells"
-        ] ];
+        devShells = std.harvest inputs.self [
+          [
+            "repo"
+            "shells"
+          ]
+        ];
       }
       {
         checks = inputs.namaka.lib.load {
