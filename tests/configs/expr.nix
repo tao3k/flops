@@ -2,11 +2,12 @@
 let
   inherit (inputs) POP dmerge;
   default =
-    ((configs.pops.default.setInitRecipes {
-      nixos = {
-        modules = [ ];
-      };
-    }).addRecipesExtender
+    (
+      (configs.pops.default.setInitRecipes {
+        nixos = {
+          modules = [ ];
+        };
+      }).addRecipesExtender
       {
         home-manager = {
           modules = [ ];

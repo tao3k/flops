@@ -13,7 +13,7 @@ let
     haumeaLoadExtender
     haumeaLoadExtenderPop
     pop
-  ;
+    ;
   inherit (haumeaInitLoadPop) initLoad;
 in
 {

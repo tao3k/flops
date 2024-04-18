@@ -17,7 +17,7 @@ let
     foldl
     filter
     deSystemize
-  ;
+    ;
 in
 {
   inputsExtender = pop {
@@ -31,24 +31,22 @@ in
       };
     };
     extension = self: super: {
-      setInitInputs =
-        (
-          initInputs:
-          extendPop self (
-            self: super: {
-              initFlake =
-                if (lib.isPath initInputs || lib.isString initInputs) then
-                  call-flake initInputs
-                else if lib.hasAttr "outPath" initInputs then
-                  call-flake initInputs.outPath
-                else
-                  super.initFlake
-              ;
-              initInputs =
-                if self.initFlake == { } then initInputs else self.initFlake.inputs;
-            }
-          )
-        );
+      setInitInputs = (
+        initInputs:
+        extendPop self (
+          self: super: {
+            initFlake =
+              if (lib.isPath initInputs || lib.isString initInputs) then
+                call-flake initInputs
+              else if lib.hasAttr "outPath" initInputs then
+                call-flake initInputs.outPath
+              else
+                super.initFlake;
+            initInputs =
+              if self.initFlake == { } then initInputs else self.initFlake.inputs;
+          }
+        )
+      );
     };
   };
 
@@ -66,24 +64,14 @@ in
       system = "";
     };
     extension = self: super: {
-      setInputs =
-        defun
-          (
-            with types; [
-              (attrs any)
-              exporterPop
-            ]
-          )
-          (inputs: extendPop self (self: super: { inherit inputs; }));
-      setSystem =
-        defun
-          (
-            with types; [
-              string
-              exporterPop
-            ]
-          )
-          (system: extendPop self (self: super: { inherit system; }));
+      setInputs = defun (with types; [
+        (attrs any)
+        exporterPop
+      ]) (inputs: extendPop self (self: super: { inherit inputs; }));
+      setSystem = defun (with types; [
+        string
+        exporterPop
+      ]) (system: extendPop self (self: super: { inherit system; }));
     };
   };
 
@@ -100,33 +88,25 @@ in
     extension =
       self: super:
       let
-        deSysInputs =
-          mapAttrs
-            (
-              name: input:
-              if (name == "nixpkgs" && input ? legacyPackages && self.system != "") then
-                (deSystemize self.system input).legacyPackages
-              else
-                deSystemize self.system input
-            )
-            extendedInputs;
+        deSysInputs = mapAttrs (
+          name: input:
+          if (name == "nixpkgs" && input ? legacyPackages && self.system != "") then
+            (deSystemize self.system input).legacyPackages
+          else
+            deSystemize self.system input
+        ) extendedInputs;
 
-        extendedInputs =
-          foldl
-            (
-              cinputs: extender:
-              let
-                ext' =
-                  if extender ? setInitInputs then
-                    extender.setInitInputs self.initInputs
-                  else
-                    extender
-                ;
-              in
-              mergeToDepth 3 cinputs ext'.inputs
-            )
-            self.initInputs
-            self.inputsExtenders;
+        extendedInputs = foldl (
+          cinputs: extender:
+          let
+            ext' =
+              if extender ? setInitInputs then
+                extender.setInitInputs self.initInputs
+              else
+                extender;
+          in
+          mergeToDepth 3 cinputs ext'.inputs
+        ) self.initInputs self.inputsExtenders;
       in
       {
         sysInputs = extendedInputs;
@@ -138,10 +118,9 @@ in
 
         exports =
           let
-            foldExporters =
-              foldl
-                (attrs: exporter: mergeToDepth 2 attrs (exporter.setInputs self.inputs).exports)
-                { };
+            foldExporters = foldl (
+              attrs: exporter: mergeToDepth 2 attrs (exporter.setInputs self.inputs).exports
+            ) { };
           in
           {
             system = foldExporters self.systemExporters;
@@ -163,73 +142,58 @@ in
             )
           );
 
-        addInputsExtender =
-          defun
-            (
-              with types; [
-                (either inputsExtender inputsExtenderPop)
-                flakePop
-              ]
-            )
-            (inputsExtender: self.addInputsExtenders [ inputsExtender ]);
+        addInputsExtender = defun (with types; [
+          (either inputsExtender inputsExtenderPop)
+          flakePop
+        ]) (inputsExtender: self.addInputsExtenders [ inputsExtender ]);
 
         addExporters =
           defun
-            (
-              with types; [
-                (list exporterPop)
-                flakePop
-              ]
-            )
+            (with types; [
+              (list exporterPop)
+              flakePop
+            ])
             (
               exporters:
               extendPop self (self: super: { exporters = super.exporters ++ exporters; })
             );
 
-        addExporter =
-          defun
-            (
-              with types; [
-                exporterPop
-                flakePop
-              ]
-            )
-            (exporter: self.addExporters [ exporter ]);
+        addExporter = defun (with types; [
+          exporterPop
+          flakePop
+        ]) (exporter: self.addExporters [ exporter ]);
 
         # Function to call at the end to get exported flake outputs
         outputsForSystem =
           defun
-            (
-              with types; [
-                string
-                (attrs any)
-              ]
-            )
+            (with types; [
+              string
+              (attrs any)
+            ])
             (
               system:
               let
                 inherit (self.setSystem system) exports;
                 # Embed system into system-spaced exports
-                systemSpacedExports =
-                  mapAttrs (_: export: { ${system} = export; })
-                    exports.system;
+                systemSpacedExports = mapAttrs (_: export: {
+                  ${system} = export;
+                }) exports.system;
               in
               mergeToDepth 3 systemSpacedExports exports.general
             );
 
         outputsForSystems =
           defun
-            (
-              with types; [
-                (list string)
-                (attrs any)
-              ]
-            )
+            (with types; [
+              (list string)
+              (attrs any)
+            ])
             (
               systems:
               lib.recursiveUpdate self.initFlake.outputs (
-                foldl (attrs: system: mergeToDepth 3 attrs (self.outputsForSystem system)) { }
-                  systems
+                foldl (
+                  attrs: system: mergeToDepth 3 attrs (self.outputsForSystem system)
+                ) { } systems
               )
             );
       };

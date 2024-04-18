@@ -1,4 +1,5 @@
 { yants, root }:
-with (yants "configs"); {
+with (yants "configs");
+{
   pop = openStruct root.configs.structAttrs.pop;
 }

@@ -24,12 +24,13 @@ let
 
   nixosModules =
     with inputs.haumea.lib;
-    ((B.addLoadExtender {
-      load = {
-        src = ../evalModules/__fixture;
-        type = "nixosModules";
-      };
-    }).addLoadExtender
+    (
+      (B.addLoadExtender {
+        load = {
+          src = ../evalModules/__fixture;
+          type = "nixosModules";
+        };
+      }).addLoadExtender
       (
         extendPop pops.loadExtender (
           self: super: {

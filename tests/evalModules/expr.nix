@@ -34,24 +34,22 @@ let
           self: super: {
             exports.test = self.outputs [
               ({
-                value =
-                  (
-                    { selfModule' }:
-                    selfModule' (m: dmerge m { config.programs.git.__profiles__.enable = false; })
-                  );
+                value = (
+                  { selfModule' }:
+                  selfModule' (m: dmerge m { config.programs.git.__profiles__.enable = false; })
+                );
                 path = [
                   "programs"
                   "git"
                 ];
               })
               ({
-                value =
-                  (
-                    { selfModule' }:
-                    selfModule' (
-                      m: dmerge m { config.programs.git.__profiles__.name = "guangtao"; }
-                    )
-                  );
+                value = (
+                  { selfModule' }:
+                  selfModule' (
+                    m: dmerge m { config.programs.git.__profiles__.name = "guangtao"; }
+                  )
+                );
                 path = [
                   "programs"
                   "git"

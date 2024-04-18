@@ -31,12 +31,10 @@ let
     extension = self: super: {
       setInit =
         defun
-          (
-            with types; [
-              (attrs any)
-              haumeaInitLoadPop
-            ]
-          )
+          (with types; [
+            (attrs any)
+            haumeaInitLoadPop
+          ])
           (
             initLoad:
             extendPop self (self: super: { initLoad = super.initLoad // initLoad; })
@@ -53,12 +51,10 @@ let
     extension = self: super: {
       setLoad =
         defun
-          (
-            with types; [
-              haumeaLoadPop
-              haumeaExporterPop
-            ]
-          )
+          (with types; [
+            haumeaLoadPop
+            haumeaExporterPop
+          ])
           (
             load:
             extendPop self (
@@ -69,7 +65,7 @@ let
                     transformer
                     type
                     inputsTransformer
-                  ;
+                    ;
                   src =
                     if l.isString load.src then l.unsafeDiscardStringContext load.src else load.src;
                   inputs = lib.pipe load.inputs (
@@ -82,15 +78,10 @@ let
 
       setLayouts = (layouts: extendPop self (self: super: { inherit layouts; }));
 
-      setOutputs =
-        defun
-          (
-            with types; [
-              (attrs any)
-              haumeaExporterPop
-            ]
-          )
-          (outputs: extendPop self (self: super: { inherit outputs; }));
+      setOutputs = defun (with types; [
+        (attrs any)
+        haumeaExporterPop
+      ]) (outputs: extendPop self (self: super: { inherit outputs; }));
     };
   };
 
@@ -107,31 +98,25 @@ let
       # -- exports --
       exports =
         let
-          generalExporters =
-            l.foldl
-              (
-                acc: extender:
-                let
-                  ex' =
-                    if extender ? setOutputs then
-                      ((extender.setOutputs self.outputs).setLayouts (
-                        self.layouts // { inherit self; }
-                      )).exports
-                    else
-                      extender.exports
-                  ;
-                in
-                acc // ex'
-              )
-              { }
-              self.exporters;
+          generalExporters = l.foldl (
+            acc: extender:
+            let
+              ex' =
+                if extender ? setOutputs then
+                  ((extender.setOutputs self.outputs).setLayouts (
+                    self.layouts // { inherit self; }
+                  )).exports
+                else
+                  extender.exports;
+            in
+            acc // ex'
+          ) { } self.exporters;
         in
         {
           default = self.layouts.default;
           outputs = self.outputs;
         }
-        // generalExporters
-      ;
+        // generalExporters;
 
       # -- exportersExtener --
       addExporter = exporter: self.addExporters [ exporter ];
@@ -142,46 +127,34 @@ let
       # -- load --
       load =
         let
-          cfg =
-            l.foldl
-              (
-                acc: extender:
-                let
-                  ext' =
-                    if (extender ? setInit) then
-                      (extender.setInit self.initLoad).load
-                    else
-                      extender.load or { }
-                  ;
-                in
-                l.recursiveMerge' ([
-                  acc
-                  ext'
-                ])
-              )
-              self.initLoad
-              self.loadExtenders;
+          cfg = l.foldl (
+            acc: extender:
+            let
+              ext' =
+                if (extender ? setInit) then
+                  (extender.setInit self.initLoad).load
+                else
+                  extender.load or { };
+            in
+            l.recursiveMerge' ([
+              acc
+              ext'
+            ])
+          ) self.initLoad self.loadExtenders;
         in
         (exporter.setLoad cfg).load;
       # -- loadExtenders --
-      addLoadExtender =
-        defun
-          (
-            with types; [
-              (either haumeaLoadExtenderPop haumeaLoadExtender)
-              haumeaDefaultPop
-            ]
-          )
-          (loadExtender: self.addLoadExtenders [ loadExtender ]);
+      addLoadExtender = defun (with types; [
+        (either haumeaLoadExtenderPop haumeaLoadExtender)
+        haumeaDefaultPop
+      ]) (loadExtender: self.addLoadExtenders [ loadExtender ]);
 
       addLoadExtenders =
         defun
-          (
-            with types; [
-              (either (list haumeaLoadExtenderPop) (list haumeaLoadExtender))
-              haumeaDefaultPop
-            ]
-          )
+          (with types; [
+            (either (list haumeaLoadExtenderPop) (list haumeaLoadExtender))
+            haumeaDefaultPop
+          ])
           (
             loadExtenders:
             extendPop self (
@@ -194,16 +167,14 @@ let
       # default is to merge the outputs with dmerege
       outputs =
         defun
-          (
-            with types; [
-              (eitherN [
-                function
-                (attrs any)
-                (list (attrs any))
-              ])
+          (with types; [
+            (eitherN [
+              function
               (attrs any)
-            ]
-          )
+              (list (attrs any))
+            ])
+            (attrs any)
+          ])
           (
             x:
             if self.layouts ? __extender then
@@ -216,33 +187,34 @@ let
               self.layouts.default
           );
 
-      layouts =
-        (
-          let
-            cfg = self.load;
-            haumeaOutputs =
-              if
-                (l.elem cfg.type [
-                  "nixosModules"
-                  "nixosProfiles"
-                  "evalModules"
-                  "nixosProfilesOmnibus"
-                ])
-              then
-                nixosModules { inherit cfg; }
-              else
-                {
-                  default = haumea.lib.load (
-                    l.removeAttrs cfg [
-                      "type"
-                      "inputsTransformer"
-                    ]
-                  );
-                }
-            ;
-          in
-          haumeaOutputs
-        );
+      layouts = (
+        let
+          cfg = self.load;
+          haumeaOutputs =
+            if
+              (l.elem cfg.type [
+                "nixosModules"
+                "nixosProfiles"
+                "evalModules"
+                "nixosProfilesOmnibus"
+              ])
+            then
+              nixosModules {
+                inherit cfg;
+                inherit (self) initLoad;
+              }
+            else
+              {
+                default = haumea.lib.load (
+                  l.removeAttrs cfg [
+                    "type"
+                    "inputsTransformer"
+                  ]
+                );
+              };
+        in
+        haumeaOutputs
+      );
     };
   };
 in

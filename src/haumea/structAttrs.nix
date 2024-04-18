@@ -18,8 +18,7 @@ let
           Invalid value for '${v}': "${x}"
           Valid values are: [ ${l.concatStringsSep " " e} ]
         '';
-    }
-  ;
+    };
   structAttrs = with yants; {
     pop = {
       __meta__ = option (
@@ -65,16 +64,13 @@ let
       inputsTransformer = either function (list any);
       inputs = attrs any;
       loader = either function (list any);
-      type =
-        enum' "options"
-          [
-            "nixosModules"
-            "default"
-            "nixosProfiles"
-            "evalModules"
-            "nixosProfilesOmnibus"
-          ]
-          "type";
+      type = enum' "options" [
+        "nixosModules"
+        "default"
+        "nixosProfiles"
+        "evalModules"
+        "nixosProfilesOmnibus"
+      ] "type";
     };
 
     haumeaLoadExtender = {

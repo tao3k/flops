@@ -51,8 +51,7 @@ let
         addInputsExtender = function;
         addExporters = function;
         addExporter = function;
-      }
-    ;
+      };
   };
 in
 structAttrs

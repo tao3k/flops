@@ -44,10 +44,11 @@ let
   };
 
   c =
-    ((b.addLoadExtender {
-      load.src = ../tests/haumeaData/__data;
-      load.inputsTransformer = [ (x: (x // { a = "1"; })) ];
-    }).addLoadExtender
+    (
+      (b.addLoadExtender {
+        load.src = ../tests/haumeaData/__data;
+        load.inputsTransformer = [ (x: (x // { a = "1"; })) ];
+      }).addLoadExtender
       (
         extendPop pops.loadExtender (
           self: super: {
@@ -96,22 +97,24 @@ let
       [
         (extendPop pops.exporter (
           self: super: {
-            exports.customModules = self.outputs [ {
-              value =
-                { selfModule' }:
-                selfModule' (
-                  m:
-                  dmerge m {
-                    config.services.openssh.enable = false;
-                    config.services.openssh.customList = with dmerge; append [ "1" ];
-                    imports = with dmerge; append [ ];
-                  }
-                );
-              path = [
-                "services"
-                "openssh"
-              ];
-            } ];
+            exports.customModules = self.outputs [
+              {
+                value =
+                  { selfModule' }:
+                  selfModule' (
+                    m:
+                    dmerge m {
+                      config.services.openssh.enable = false;
+                      config.services.openssh.customList = with dmerge; append [ "1" ];
+                      imports = with dmerge; append [ ];
+                    }
+                  );
+                path = [
+                  "services"
+                  "openssh"
+                ];
+              }
+            ];
           }
         ))
       ];
@@ -140,6 +143,6 @@ in
     evalModules
     loadd
     b1
-  ;
+    ;
   options = mkOpt { test = "1"; };
 }

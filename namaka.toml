@@ -6,7 +6,7 @@ cmd = [
   "./local",
   "--override-input",
   "namaka",
-  "github:nix-community/namaka"
+  "github:nix-community/namaka",
 ]
 
 [eval]
@@ -16,5 +16,5 @@ cmd = [
   "./local#checks",
   "--override-input",
   "namaka",
-  "github:nix-community/namaka"
+  "github:nix-community/namaka",
 ]

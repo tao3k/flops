@@ -8,8 +8,8 @@ let
   inherit (lib) flake;
 in
 {
-  a =
-    (((flake.pops.default.setInitInputs ./__nixpkgsFlake).setSystem "x86_64-linux")
+  a = (
+    ((flake.pops.default.setInitInputs ./__nixpkgsFlake).setSystem "x86_64-linux")
     .addInputsExtender
       (
         POP.lib.extendPop flake.pops.inputsExtender (
@@ -20,6 +20,6 @@ in
           }
         )
       )
-    );
+  );
   b = self.a.addInputsExtender { inputs.b = "2"; };
 }

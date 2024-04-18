@@ -1,8 +1,9 @@
 {
-  /* # we can also use the following syntax to define a module
-     config = {
-      enable = true;
-      }
+  /*
+    # we can also use the following syntax to define a module
+    config = {
+     enable = true;
+     }
   */
 
   enable = true;

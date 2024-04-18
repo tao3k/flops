@@ -2,13 +2,14 @@
 let
   inherit (lib) configs;
 in
-((
-  ((configs.pops.default.setInitRecipes { profiles = { }; }).addRecipesExtender {
-    exx = {
-      a = "2";
-    };
-  })
-).addArgsExtender
+(
+  (
+    ((configs.pops.default.setInitRecipes { profiles = { }; }).addRecipesExtender {
+      exx = {
+        a = "2";
+      };
+    })
+  ).addArgsExtender
   { nixos.default = { }; }
 ).addExporters
   [

@@ -12,16 +12,17 @@ let
     inherit inputs;
     outputs =
       inputs:
-      (((pops.default.setInitInputs inputs).addInputsExtenders [
-        (POP.lib.extendPop pops.inputsExtender (
-          self: super: {
-            inputs = {
-              inherit ((inputs.call-flake ../../examples/__nixpkgsFlake).inputs) nixpkgs;
-              nixlib.lib.func = self.initInputs.nixlib.lib.genAttrs;
-            };
-          }
-        ))
-      ]).addExporters
+      (
+        ((pops.default.setInitInputs inputs).addInputsExtenders [
+          (POP.lib.extendPop pops.inputsExtender (
+            self: super: {
+              inputs = {
+                inherit ((inputs.call-flake ../../examples/__nixpkgsFlake).inputs) nixpkgs;
+                nixlib.lib.func = self.initInputs.nixlib.lib.genAttrs;
+              };
+            }
+          ))
+        ]).addExporters
         [
           (POP.lib.extendPop pops.exporter (
             self: _: { exports.packages.firefox = self.inputs.nixpkgs.firefox; }
@@ -36,13 +37,16 @@ let
   outputs =
     inputs:
     (
-      (((pops.default.setInitInputs inputs).setSystem "x86_64-linux")
-      .addInputsExtenders
-        [ {
-          inputs = {
-            nixlib.lib.func = lib.isFunction;
-          };
-        } ]
+      (
+        ((pops.default.setInitInputs inputs).setSystem "x86_64-linux")
+        .addInputsExtenders
+        [
+          {
+            inputs = {
+              nixlib.lib.func = lib.isFunction;
+            };
+          }
+        ]
       )
     ).inputs;
 in
