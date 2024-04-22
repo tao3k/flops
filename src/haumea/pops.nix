@@ -18,13 +18,14 @@ let
 
   loadExtender = pop {
     defaults = {
-      initLoad = {
+      initLoad = rec {
         src = ./.;
         loader = haumea.lib.loaders.default;
         inputs = { };
         inputsTransformer = [ ];
         transformer = [ ];
         type = "default";
+        nixosModuleImporter = haumea.lib.loaders.scoped;
       };
       load = { };
     };
@@ -65,6 +66,7 @@ let
                     transformer
                     type
                     inputsTransformer
+                    nixosModuleImporter
                     ;
                   src =
                     if l.isString load.src then l.unsafeDiscardStringContext load.src else load.src;
@@ -209,6 +211,7 @@ let
                   l.removeAttrs cfg [
                     "type"
                     "inputsTransformer"
+                    "nixosModuleImporter"
                   ]
                 );
               };

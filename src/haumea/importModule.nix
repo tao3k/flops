@@ -8,6 +8,7 @@ let
   l = lib // builtins;
   inherit (builtins) mapAttrs;
   inherit (lib) functionArgs pipe toFunction;
+  # inherit (lib.modules) applyModuleArgsIfFunction;
 
   isModule = l.elem cfg.type [
     "nixosModules"
@@ -23,8 +24,6 @@ let
       (mapAttrs (name: _: inputs.${name}))
       f
     ];
-
-  importModule = importer;
 
   removeFileSuffix = l.removeSuffix ".nix";
   removeDefault = l.removeSuffix "/default";
@@ -55,7 +54,7 @@ in
     let
       module =
         if (isTopLevel path) && cfg.type == "nixosProfilesOmnibus" then
-          importModule inputs path
+          importer inputs path
         else
           {
             config ? { },
@@ -81,7 +80,7 @@ in
             );
 
             moduleArgs = baseModuleArgs // {
-              loadSubmodule = path: (mkExtender (importModule baseModuleArgs path) path);
+              loadSubmodule = path: (mkExtender (importer baseModuleArgs path) path);
             };
 
             mkExtender =
@@ -105,7 +104,7 @@ in
                   if (l.isFunction v) then
                     lazyArgsPerParameter v (moduleArgs // extraArgs)
                   else if (l.isPath v) then
-                    importModule (moduleArgs // extraArgs) v
+                    importer (moduleArgs // extraArgs) v
                   else
                     v;
 
@@ -144,7 +143,7 @@ in
                 options = fun module.options or { };
               };
 
-            callDefaultModule = importModule moduleArgs path;
+            callDefaultModule = importer moduleArgs path;
             # => { config = { }; imports = [... ]; _file }
             finalModule =
               let

@@ -71,6 +71,7 @@ let
         "evalModules"
         "nixosProfilesOmnibus"
       ] "type";
+      nixosModuleImporter = function;
     };
 
     haumeaLoadExtender = {

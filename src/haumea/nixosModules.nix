@@ -17,7 +17,7 @@ let
       loader =
         with haumea.lib;
         (lib.optionals (initLoad.loader != haumea.lib.loaders.default) [
-          (matchers.nix (super.importModule cfg extender haumea.lib.loaders.scoped))
+          (matchers.nix (super.importModule cfg extender cfg.nixosModuleImporter))
         ])
         ++ (lib.optionals (lib.isList cfg.loader)) cfg.loader;
       transformer =
