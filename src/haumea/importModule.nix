@@ -64,7 +64,6 @@ in
           let
             mkModulePath =
               attrs': l.setAttrByPath (relModulePathWithoutDefault path) attrs';
-            test = config._module.args.pkgs or { };
             baseModuleArgs = (
               inputs
               // args

@@ -7,7 +7,7 @@ in
   configs = inputs.omnibus.pops.configs {
     inputs = {
       inputs = {
-        inherit (inputs') nixfmt pre-commit-hooks;
+        inherit (inputs') nixfmt git-hooks;
         inherit (inputs) std;
         inherit nixpkgs;
       };
