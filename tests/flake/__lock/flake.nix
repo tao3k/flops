@@ -1,7 +1,7 @@
 {
   inputs = {
     flake-compat = {
-      url = "github:gtrunsec/flake-compat/lockFile";
+      url = "github:edolstra/flake-compat";
       flake = false;
     };
   };
