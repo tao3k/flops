@@ -24,11 +24,11 @@
     },
     "call-flake": {
       "locked": {
-        "lastModified": 1754188369,
+        "lastModified": 1754792893,
         "narHash": "sha256-11/dQG/vjpfMi4D7ku2o1UtUMf8Sud0KJ/Le44zHIc8=",
         "owner": "divnix",
         "repo": "call-flake",
-        "rev": "28b5db621545b009b456f5a58ab16abecb04d622",
+        "rev": "1abb37095a152e0e8ba4315c57c84905bc8bf93c",
         "type": "github"
       },
       "original": {
